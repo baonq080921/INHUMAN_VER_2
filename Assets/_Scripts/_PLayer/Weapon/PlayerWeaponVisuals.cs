@@ -6,12 +6,12 @@ public class PlayerWeaponVisuals : MonoBehaviour
 {
     private Animator anim;
     private Player player;
-    private bool isGrabbingWeapon; 
 
 
     #region Gun transforms region
 
     [SerializeField] private WeaponModel[] weaponModels;
+    [SerializeField] private BackupWeaponModel[] backupWeaponModels;
 
 
     [SerializeField] private Transform[] gunTransforms;
@@ -44,6 +44,7 @@ public class PlayerWeaponVisuals : MonoBehaviour
         rig = GetComponentInChildren<Rig>();
         player = GetComponent<Player>();
         weaponModels = GetComponentsInChildren<WeaponModel>(true);
+        backupWeaponModels = GetComponentsInChildren<BackupWeaponModel>(true);
 
     }
 
@@ -54,12 +55,15 @@ public class PlayerWeaponVisuals : MonoBehaviour
         UpdateLeftHandIKWeight();
     }
 
+
+
+    public void PlayFireAnimation() => anim.SetTrigger("Fire");
     public void PlayReloadAnimation()
     {
 
-        if(isGrabbingWeapon) return;
-        
+        float reloadSpeed = player.weapon.CurrentWeapon().reloadSpeed;
         anim.SetTrigger("Reload");
+        anim.SetFloat("ReloadSpeed",reloadSpeed);
         ReduceRigWeight();
     }
 
@@ -80,25 +84,31 @@ public class PlayerWeaponVisuals : MonoBehaviour
     public void PlayWeaponEquipAnimation()
     {
 
-        GrabType grabType = CurrentWeaponModel().grabType;
+        EquipType equipType = CurrentWeaponModel().equipAnimationType;
+        float equipmentSpeed = player.weapon.CurrentWeapon().equipmentSpeed;
         leftHandIK.weight = 0;
         ReduceRigWeight();
-        anim.SetFloat("WeaponGrabType", ((float)grabType));
-        anim.SetTrigger("WeaponGrab");
+        anim.SetFloat("EquipType", ((float)equipType));
+        anim.SetTrigger("EquipWeapon");
+        anim.SetFloat("EquipSpeed",equipmentSpeed);
 
-        SetBusyGrabbingWeaponTo(true);
     }
-    public void SetBusyGrabbingWeaponTo(bool busy)
-    {
-        isGrabbingWeapon = busy;
-        anim.SetBool("BusyGrabbingWeapon", isGrabbingWeapon);
-    }
+   
 
 
 
-    public void SwitchOnWeaponModel()
+    //Switch on/off current weapon model player is currently holding
+    public void SwitchOnCurrentWeaponModel()
     {
         int animationIndex = ((int)CurrentWeaponModel().holdType);
+        SwitchOffBackupWeaponModels();
+
+        if(!player.weapon.HasOnlyOneWeapon()){
+            SwitchOnBackupWeaponModels();
+        }
+
+        SwitchOffWeaponModels();
+
         SwitchAnimationLayer(animationIndex);
         CurrentWeaponModel().gameObject.SetActive(true);
         AttachLeftHand();
@@ -110,7 +120,22 @@ public class PlayerWeaponVisuals : MonoBehaviour
             weaponModels[i].gameObject.SetActive(false);
         }
     }
-    
+
+
+    // Switch on and off backup weapon models
+    public void SwitchOnBackupWeaponModels(){
+        WeaponType weaponType = player.weapon.BackUpWeapon().weaponType;
+        foreach(BackupWeaponModel backupWeaponModel in backupWeaponModels){
+            if(backupWeaponModel.weaponType == weaponType){
+                backupWeaponModel.gameObject.SetActive(true);
+            }
+        }
+    }
+    private void SwitchOffBackupWeaponModels(){
+        foreach(BackupWeaponModel backupWeaponModel in backupWeaponModels){
+            backupWeaponModel.gameObject.SetActive(false);
+        }
+    }
     private void SwitchAnimationLayer(int layerIndex)
     {
         for (int i = 1; i < anim.layerCount; i++)
