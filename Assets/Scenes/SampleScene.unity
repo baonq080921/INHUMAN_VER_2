@@ -3754,8 +3754,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 833702932}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.409, y: -0.32, z: -0.05}
+  m_LocalRotation: {x: 0.006857274, y: 0.0017280648, z: 0.000019356137, w: 0.999975}
+  m_LocalPosition: {x: -0.031, y: 0.123, z: -0.057}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4216,6 +4216,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 952644914}
+  - component: {fileID: 952644915}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -4240,6 +4241,19 @@ Transform:
   - {fileID: 963194228}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &952644915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 952644913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2c529fcd37485e4289f0651f63ef71c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoomRate: 0.1
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -7553,15 +7567,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1485437714111962272, guid: 3a220331cc824c349805b11017b66547, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 12.65
+      value: 12.25
       objectReference: {fileID: 0}
     - target: {fileID: 1485437714111962272, guid: 3a220331cc824c349805b11017b66547, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.3100001
+      value: -0.43
       objectReference: {fileID: 0}
     - target: {fileID: 1485437714111962272, guid: 3a220331cc824c349805b11017b66547, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.67999995
+      value: -0.03
       objectReference: {fileID: 0}
     - target: {fileID: 1485437714111962272, guid: 3a220331cc824c349805b11017b66547, type: 3}
       propertyPath: m_LocalRotation.w
@@ -8698,12 +8712,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weapon:
     weaponType: 2
+    shootType: 0
+    bulletsPerShot: 0
+    defaultFireRate: 0
+    fireRate: 1
+    burstAvailable: 0
+    burstActive: 0
+    burstBulletsPerShot: 0
+    burstFireRate: 0
+    burstFireDelay: 0.1
     bulletsInMagazine: 30
     magazineCapacity: 30
     totalReserveAmmo: 1000
     reloadSpeed: 1
     equipmentSpeed: 1
-    fireRate: 1
+    gunDistance: 4
+    cameraDistance: 2
+    baseBulletSpread: 0.5
+    maximumBulletSpread: 5
+    bulletSpreadIncreaseRate: 0.15
 --- !u!65 &1719596537
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8829,8 +8856,8 @@ GameObject:
   - component: {fileID: 1746550279}
   - component: {fileID: 1746550270}
   - component: {fileID: 1746550277}
-  - component: {fileID: 1746550275}
   - component: {fileID: 1746550278}
+  - component: {fileID: 1746550275}
   m_Layer: 8
   m_Name: Player
   m_TagString: Untagged
@@ -8921,30 +8948,69 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentWeapon:
     weaponType: 0
+    shootType: 0
+    bulletsPerShot: 0
+    defaultFireRate: 0
+    fireRate: 1
+    burstAvailable: 0
+    burstActive: 0
+    burstBulletsPerShot: 0
+    burstFireRate: 0
+    burstFireDelay: 0.1
     bulletsInMagazine: 0
     magazineCapacity: 0
     totalReserveAmmo: 0
     reloadSpeed: 1
     equipmentSpeed: 1
-    fireRate: 1
+    gunDistance: 4
+    cameraDistance: 3
+    baseBulletSpread: 0.5
+    maximumBulletSpread: 5
+    bulletSpreadIncreaseRate: 0.15
   bulletPrefab: {fileID: 709851603379088992, guid: 5d6f9576cecc23b428a0b635b90998be, type: 3}
   bulletSpeed: 15
   weaponHolder: {fileID: 1354336790}
   weaponSlots:
-  - weaponType: 0
+  - weaponType: 3
+    shootType: 0
+    bulletsPerShot: 0
+    defaultFireRate: 0
+    fireRate: 4
+    burstAvailable: 0
+    burstActive: 0
+    burstBulletsPerShot: 0
+    burstFireRate: 0
+    burstFireDelay: 0.1
     bulletsInMagazine: 9999
     magazineCapacity: 9999
     totalReserveAmmo: 99999
     reloadSpeed: 1
-    equipmentSpeed: 1
-    fireRate: 4
-  - weaponType: 4
-    bulletsInMagazine: 12
-    magazineCapacity: 999
+    equipmentSpeed: 1.5
+    gunDistance: 4
+    cameraDistance: 4
+    baseBulletSpread: 0.5
+    maximumBulletSpread: 1
+    bulletSpreadIncreaseRate: 0.15
+  - weaponType: 2
+    shootType: 1
+    bulletsPerShot: 3
+    defaultFireRate: 10
+    fireRate: 10
+    burstAvailable: 1
+    burstActive: 0
+    burstBulletsPerShot: 3
+    burstFireRate: 1.5
+    burstFireDelay: 0.1
+    bulletsInMagazine: 9999
+    magazineCapacity: 9999
     totalReserveAmmo: 99999
-    reloadSpeed: 1
+    reloadSpeed: 2
     equipmentSpeed: 1
-    fireRate: 1
+    gunDistance: 8
+    cameraDistance: 6
+    baseBulletSpread: 0.5
+    maximumBulletSpread: 3
+    bulletSpreadIncreaseRate: 0.15
   maxSlots: 2
 --- !u!114 &1746550278
 MonoBehaviour:

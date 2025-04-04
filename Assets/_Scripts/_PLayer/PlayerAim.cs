@@ -40,9 +40,11 @@ public class PlayerAim : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.P))
             isAimingPrecisly = !isAimingPrecisly;
+            Debug.Log("Aiming precisely: " + isAimingPrecisly);
 
         if(Input.GetKeyDown(KeyCode.L))
             isLockingToTarget = !isLockingToTarget;
+            Debug.Log("Locking to target: " + isLockingToTarget);
 
         UpdateAimVisuals();
         UpdateAimPosition();
@@ -65,7 +67,8 @@ public class PlayerAim : MonoBehaviour
         Vector3 laserDirection = player.weapon.BulletDirection();
 
         float laserTipLenght = .5f;
-        float gunDistance = 4f;
+        float gunDistance = player.weapon.CurrentWeapon().gunDistance;
+        
 
         Vector3 endPoint = gunPoint.position + laserDirection * gunDistance;
 

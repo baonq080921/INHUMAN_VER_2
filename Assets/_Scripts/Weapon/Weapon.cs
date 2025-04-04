@@ -51,6 +51,11 @@ public class Weapon
     [Range(1f,2f)]
     public float equipmentSpeed = 1f; // Make the equip speed on different gun change
 
+    [Range(2,12)]
+    public float gunDistance = 4f; // The distance from the player to the gun when shooting
+
+    [Range(3,8)]
+    public float cameraDistance = 2f; // The distance from the camera to the gun when shooting
 
 
 

@@ -62,6 +62,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -148,6 +151,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletImpactFX: {fileID: 4266559762961818354, guid: 7326ad26c6337224d8144cf0e2f4fa68, type: 3}
+  trailRenderer: {fileID: -6479415848919586009}
+  boxCollider: {fileID: 7162561838308465631}
+  meshRenderer: {fileID: 3640774188930598250}
 --- !u!96 &-6479415848919586009
 TrailRenderer:
   serializedVersion: 3
@@ -166,6 +172,9 @@ TrailRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
