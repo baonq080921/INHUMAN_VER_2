@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -17,6 +18,14 @@ public class Player : MonoBehaviour
         movement = GetComponent<PlayerMovement>();
         weapon = GetComponent<PlayerWeaponController>();
         weaponVisuals = GetComponent<PlayerWeaponVisuals>();
+        StartCoroutine(TestMethod());
+    }
+
+    IEnumerator TestMethod(){
+        for(int i = 0; i < 10; i++){
+            Debug.Log(i);
+            yield return new WaitForSeconds(1f);
+        }
     }
     private void OnEnable()
     {

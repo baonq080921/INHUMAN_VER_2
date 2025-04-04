@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -38,6 +39,10 @@ public class PlayerWeaponController : MonoBehaviour
     void Update()
     {
         if(isShooting) Shoot();
+
+        if(Input.GetKeyDown(KeyCode.T)){
+            currentWeapon.ToggleBurstMode();
+        }
     }
 
     #region Slots - Managment - Equip/PickUp/Drop/Ready
@@ -74,33 +79,58 @@ public class PlayerWeaponController : MonoBehaviour
 
 
      #endregion
+
+     IEnumerator BurstFire(){
+        SetWeaponReady(false);
+        for(int i = 1 ; i <= currentWeapon.bulletsPerShot; i++){
+            FireSingleBullet();
+            yield return new WaitForSeconds(currentWeapon.burstFireDelay);
+            if(i >= currentWeapon.bulletsPerShot){
+                SetWeaponReady(true);
+            }
+            
+        }
+     }
     private void Shoot()
     {
 
-        if(!WeaponReady()) return;
+        if (!WeaponReady()) return;
 
-        if(!currentWeapon.CanShoot()){
+        if (!currentWeapon.CanShoot())
+        {
             Debug.Log("OUt of bullet");
             return;
         }
 
-        if(currentWeapon.shootType == ShootType.Single) isShooting = false;
-        
+        player.weaponVisuals.PlayFireAnimation();
 
+        if (currentWeapon.shootType == ShootType.Single) isShooting = false;
+        if(currentWeapon.BurstActive()){
+            StartCoroutine("BurstFire");
+            return;
+        }
+        FireSingleBullet();
+
+    }
+
+    private void FireSingleBullet()
+    {
+
+        currentWeapon.bulletsInMagazine --;
         // ObjectPool.instance.SaySomething();
         GameObject newBullet = ObjectPool.instance.GetBullet();
-            //Instantiate(bulletPrefab, gunPoint.position, Quaternion.LookRotation(gunPoint.forward));
+        //Instantiate(bulletPrefab, gunPoint.position, Quaternion.LookRotation(gunPoint.forward));
 
         newBullet.transform.position = GunPoint().position;
         newBullet.transform.rotation = Quaternion.LookRotation(GunPoint().forward);
 
         Rigidbody rbNewBullet = newBullet.GetComponent<Rigidbody>();
 
-        rbNewBullet.mass = REFERENCE_BULLET_SPEED / bulletSpeed;
-        rbNewBullet.linearVelocity = BulletDirection() * bulletSpeed;
-        player.weaponVisuals.PlayFireAnimation();
-    }
 
+        Vector3 bulletsDirection = currentWeapon.ApplyBulletSpread(BulletDirection());
+        rbNewBullet.mass = REFERENCE_BULLET_SPEED / bulletSpeed;
+        rbNewBullet.linearVelocity = bulletsDirection * bulletSpeed;
+    }
 
     private void Reload()
     {
@@ -108,6 +138,9 @@ public class PlayerWeaponController : MonoBehaviour
         player.weaponVisuals.PlayReloadAnimation();
     }
 
+
+    // This method is used to get the direction of the bullet based on the aim position and the gun point position.
+    // It calculates the direction vector from the gun point to the aim position and normalizes it.
     public Vector3 BulletDirection()
     {
         Transform aim = player.aim.Aim();
