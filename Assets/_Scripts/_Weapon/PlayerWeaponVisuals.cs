@@ -124,16 +124,35 @@ public class PlayerWeaponVisuals : MonoBehaviour
 
     // Switch on and off backup weapon models
     public void SwitchOnBackupWeaponModels(){
-        WeaponType weaponType = player.weapon.BackUpWeapon().weaponType;
-        foreach(BackupWeaponModel backupWeaponModel in backupWeaponModels){
-            if(backupWeaponModel.weaponType == weaponType){
-                backupWeaponModel.gameObject.SetActive(true);
+        BackupWeaponModel lowHangWeapon = null;
+        BackupWeaponModel backHangWeapon = null;
+        BackupWeaponModel sideHangWeapon = null;
+
+
+        foreach(BackupWeaponModel backupModel in backupWeaponModels){
+
+                if(backupModel.weaponType == player.weapon.CurrentWeapon().weaponType) // check the backup weapon with the current weapon
+                    continue;
+
+
+
+            if(player.weapon.WeaponInSlots(backupModel.weaponType) != null){
+                if(backupModel.HangTypeIs(HangType.LowBackHang))
+                    lowHangWeapon = backupModel;
+                if(backupModel.HangTypeIs(HangType.BackHang))
+                    backHangWeapon = backupModel;
+                if(backupModel.HangTypeIs(HangType.SideHang))
+                    sideHangWeapon = backupModel;
             }
         }
+
+        lowHangWeapon?.Activate(true);
+        backHangWeapon?.Activate(true);
+        sideHangWeapon?.Activate(true);
     }
     private void SwitchOffBackupWeaponModels(){
-        foreach(BackupWeaponModel backupWeaponModel in backupWeaponModels){
-            backupWeaponModel.gameObject.SetActive(false);
+        foreach(BackupWeaponModel backupModel in backupWeaponModels){
+            backupModel.Activate(false);
         }
     }
     private void SwitchAnimationLayer(int layerIndex)

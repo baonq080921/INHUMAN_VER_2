@@ -38,11 +38,8 @@ public class PlayerWeaponController : MonoBehaviour
 
     void Update()
     {
-        if(isShooting) Shoot();
-
-        if(Input.GetKeyDown(KeyCode.T)){
-            currentWeapon.ToggleBurstMode();
-        }
+        if(isShooting) 
+            Shoot();
     }
 
     #region Slots - Managment - Equip/PickUp/Drop/Ready
@@ -50,11 +47,13 @@ public class PlayerWeaponController : MonoBehaviour
 
     private void EquipWeaponStart() => EquipWeapon(0);
     private void EquipWeapon(int i){
+
+        if(i >= weaponSlots.Count) return;
         SetWeaponReady(false);
         currentWeapon = weaponSlots[i];
         player.weaponVisuals.PlayWeaponEquipAnimation();
 
-        CameraManager.instance.ChangeCameraDistance(currentWeapon.cameraDistance);
+        //CameraManager.instance.ChangeCameraDistance(currentWeapon.cameraDistance);
     }
 
     public void PickupWeapon(Weapon newWeapon){
@@ -78,6 +77,16 @@ public class PlayerWeaponController : MonoBehaviour
     public bool WeaponReady() => weaponReady;
 
     public bool HasOnlyOneWeapon() => weaponSlots.Count <= 1;
+
+    public Weapon WeaponInSlots(WeaponType weaponType) {
+        foreach(Weapon weapon in weaponSlots){
+            if(weapon.weaponType == weaponType){
+                return weapon;
+            }
+        }
+
+        return null;
+    }
 
 
      #endregion
@@ -159,16 +168,6 @@ public class PlayerWeaponController : MonoBehaviour
 
     public Transform GunPoint() => player.weaponVisuals.CurrentWeaponModel().gunPoint;
 
-    // Return the backup weapon in the weapon slots
-    public Weapon BackUpWeapon(){
-        foreach(Weapon weapon in weaponSlots){
-            if(weapon != currentWeapon){
-                Debug.Log(weapon.weaponType);
-                return weapon; 
-            }
-        }
-        return null;
-    }
     public Weapon CurrentWeapon() => currentWeapon;
 
     #region INPUT REGION
@@ -176,6 +175,9 @@ public class PlayerWeaponController : MonoBehaviour
         PlayerControls controls = player.controls;
         controls.Character.EquipSlot1.performed += context => EquipWeapon(0);
         controls.Character.EquipSlot2.performed += context => EquipWeapon(1);
+        controls.Character.EquipSlot3.performed += context => EquipWeapon(2);
+        controls.Character.EquipSlot4.performed += context => EquipWeapon(3);
+
         controls.Character.Drop.performed += context => DropWeapon();
         controls.Character.Fire.performed += context => isShooting = true;
         controls.Character.Fire.canceled += context => isShooting = false;
@@ -186,6 +188,7 @@ public class PlayerWeaponController : MonoBehaviour
 
             }
         };
+        controls.Character.ToggleWeaponMode.performed += context => currentWeapon.ToggleBurstMode();
     #endregion
     }
 

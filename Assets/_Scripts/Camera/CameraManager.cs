@@ -8,6 +8,7 @@ public class CameraManager : MonoBehaviour
     private CinemachineFramingTransposer transposer; // Reference to the Cinemachine framing transposer
     private float targetCameraDistance; // target camera distance
     public float zoomRate; // Rate of zooming in/out
+    [SerializeField] bool canChangeCameraDistance;
     void Awake()
     {
         if(instance == null){
@@ -27,12 +28,14 @@ public class CameraManager : MonoBehaviour
 
     private void UpdateCameraDistance()
     {
-        float currentCameraDistance = transposer.m_CameraDistance; // Get the current camera distance   
+        if(canChangeCameraDistance == false){
+            float currentCameraDistance = transposer.m_CameraDistance; // Get the current camera distance   
 
-        if (Mathf.Abs(targetCameraDistance - currentCameraDistance) <.01f)  return;
+            if (Mathf.Abs(targetCameraDistance - currentCameraDistance) <.01f)  return;
 
-        transposer.m_CameraDistance =
-            Mathf.Lerp(currentCameraDistance, targetCameraDistance, zoomRate); // Smoothly interpolate the camera distance towards the target distance
+            transposer.m_CameraDistance =
+                Mathf.Lerp(currentCameraDistance, targetCameraDistance, zoomRate); // Smoothly interpolate the camera distance towards the target distance
+        }
     }
 
     public void ChangeCameraDistance(float distance)
