@@ -11,7 +11,7 @@ public class PlayerWeaponController : MonoBehaviour
 
     private Player player;
 
-
+    [SerializeField] private Weapon_Data defaultWeaponData;
     [SerializeField] private Weapon currentWeapon;
     private bool weaponReady;
     private bool isShooting;
@@ -27,12 +27,13 @@ public class PlayerWeaponController : MonoBehaviour
     [Header("Inventory")]
     [SerializeField] private List<Weapon> weaponSlots;
     [SerializeField] private int maxSlots = 2;  
+    [SerializeField] private GameObject weaponPickUpPrefab;
 
     private void Start()
     {
         player = GetComponent<Player>();
         currentWeapon.bulletsInMagazine = currentWeapon.magazineCapacity;
-        Invoke("EquipWeaponStart",2f);
+        Invoke("EquipWeaponStartingWeapon",2f);
         AssginInputEvents();
     }
 
@@ -45,7 +46,10 @@ public class PlayerWeaponController : MonoBehaviour
     #region Slots - Managment - Equip/PickUp/Drop/Ready
 
 
-    private void EquipWeaponStart() => EquipWeapon(0);
+    private void EquipWeaponStartingWeapon(){
+        weaponSlots[0] = new Weapon(defaultWeaponData);
+        EquipWeapon(0);
+    }
     private void EquipWeapon(int i){
 
         if(i >= weaponSlots.Count) return;
@@ -57,19 +61,53 @@ public class PlayerWeaponController : MonoBehaviour
     }
 
     public void PickupWeapon(Weapon newWeapon){
-        if(weaponSlots.Count >= maxSlots){
+
+        // If the weapon we have are in the inventory so we take the ammo of that gun and put it in the magazine
+
+        if(WeaponInSlots(newWeapon.weaponType) != null){
+
+            WeaponInSlots(newWeapon.weaponType).totalReserveAmmo += newWeapon.bulletsInMagazine;
             return;
         }
+
+        // This is where out slots is full and the current weapon we holding type is different than the type we going to
+        //pick up so we can change the current weapon to the new weapon:
+
+        if(weaponSlots.Count >= maxSlots && newWeapon.weaponType != currentWeapon.weaponType){
+
+            int weaponIndex = weaponSlots.IndexOf(currentWeapon);
+            player.weaponVisuals.SwitchOffWeaponModels();
+            weaponSlots[weaponIndex] = newWeapon;
+
+            CreateWeaponOnTheGround();
+
+            EquipWeapon(weaponIndex);
+            return;
+        }
+
+
+        // If we still have slot we can pick up any weapon:
         weaponSlots.Add(newWeapon);
         player.weaponVisuals.SwitchOnBackupWeaponModels();
     }
 
-    private void DropWeapon(){
-        if(HasOnlyOneWeapon()){
+    private void DropWeapon()
+    {
+        if (HasOnlyOneWeapon())
+        {
             return;
         }
+        CreateWeaponOnTheGround();
+
         weaponSlots.Remove(currentWeapon);
         EquipWeapon(0);
+    }
+
+    private void CreateWeaponOnTheGround()
+    {
+        GameObject dropWeapon = ObjectPool.instance.GetObject(weaponPickUpPrefab);
+
+        dropWeapon.GetComponent<Pickup_Weapon>()?.SetupPickupWeapon(currentWeapon, transform);
     }
 
     public void SetWeaponReady(bool ready) => weaponReady = ready;
@@ -129,7 +167,7 @@ public class PlayerWeaponController : MonoBehaviour
 
         currentWeapon.bulletsInMagazine --;
         // ObjectPool.instance.SaySomething();
-        GameObject newBullet = ObjectPool.instance.GetBullet();
+        GameObject newBullet = ObjectPool.instance.GetObject(bulletPrefab);
         //Instantiate(bulletPrefab, gunPoint.position, Quaternion.LookRotation(gunPoint.forward));
 
         newBullet.transform.position = GunPoint().position;

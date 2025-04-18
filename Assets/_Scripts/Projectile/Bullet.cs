@@ -27,23 +27,40 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        if(Vector3.Distance(startPosition, transform.position) > flyDistance - 1.5f){
+        FadeTrailIfNeeded();
+
+        DisableBulletIfNeeded();
+        ReturnToPoolIfNeeded();
+    }
+
+    private void FadeTrailIfNeeded()
+    {
+        if (Vector3.Distance(startPosition, transform.position) > flyDistance - 1.5f)
+        {
             trailRenderer.time -= 5f * Time.deltaTime;
         }
-        
+    }
+
+    private void DisableBulletIfNeeded()
+    {
         // if the bullet fying out of the distance we set, we return it to the pool.
         // This is to prevent the bullet from flying forever in the scene.isFlying
-        if(Vector3.Distance(startPosition,transform.position) > flyDistance && bulletDisabled == false){
+        if (Vector3.Distance(startPosition, transform.position) > flyDistance && bulletDisabled == false)
+        {
             boxCollider.enabled = false;
             meshRenderer.enabled = false;
             bulletDisabled = true;
 
         }
-        if(trailRenderer.time < 0){
-            ObjectPool.instance.ReturnBullet(gameObject);
-        }
     }
 
+    private void ReturnToPoolIfNeeded()
+    {
+        if (trailRenderer.time < 0)
+        {
+            ObjectPool.instance.ReturnToObject(gameObject);
+        }
+    }
 
     public void BulletSetUp(float fylingDistance){
         bulletDisabled = false;
@@ -58,8 +75,10 @@ public class Bullet : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         CreateImpactFx(collision);
-        ObjectPool.instance.ReturnBullet(gameObject);
+        ReturnBulletToPool();
     }
+
+    private void ReturnBulletToPool() => ObjectPool.instance.ReturnToObject(gameObject);
 
     private void CreateImpactFx(Collision collision)
     {
@@ -67,10 +86,9 @@ public class Bullet : MonoBehaviour
         {
             ContactPoint contact = collision.contacts[0];
 
-            GameObject newImpactFx =
-                Instantiate(bulletImpactFX, contact.point, Quaternion.LookRotation(contact.normal));
-
-            Destroy(newImpactFx, 1f);
+            GameObject newImpactFx = ObjectPool.instance.GetObject(bulletImpactFX);
+            newImpactFx.transform.position = contact.point;
+            ObjectPool.instance.ReturnToObject(newImpactFx, 1);
         }
     }
 }

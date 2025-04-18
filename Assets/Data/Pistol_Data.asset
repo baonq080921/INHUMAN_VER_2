@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34dfd9696e3f3a449a82bf25fed8ee4c, type: 3}
+  m_Name: Pistol_Data
+  m_EditorClassIdentifier: 
+  weaponName: TVT 47
+  shootType: 0
+  fireRate: 4
+  bulletsPerShot: 1
+  defaultFireRate: 0
+  burstActive: 0
+  burstAvailable: 0
+  burstBulletsPerShot: 0
+  burstFireRate: 0
+  burstFireDelay: 0.15
+  bulletsInMagazine: 20
+  magazineCapacity: 20
+  totalReserveAmmo: 999999
+  baseBulletSpread: 0.25
+  maximumBulletSpread: 2
+  bulletSpreadIncreaseRate: 0.15
+  weaponType: 0
+  reloadSpeed: 1
+  equipmentSpeed: 1
+  gunDistance: 6
+  cameraDistance: 6

@@ -40,11 +40,9 @@ public class PlayerAim : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.P))
             isAimingPrecisly = !isAimingPrecisly;
-            Debug.Log("Aiming precisely: " + isAimingPrecisly);
 
         if(Input.GetKeyDown(KeyCode.L))
             isLockingToTarget = !isLockingToTarget;
-            Debug.Log("Locking to target: " + isLockingToTarget);
 
         UpdateAimVisuals();
         UpdateAimPosition();

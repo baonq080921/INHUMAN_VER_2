@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34dfd9696e3f3a449a82bf25fed8ee4c, type: 3}
+  m_Name: ShotGun_Data
+  m_EditorClassIdentifier: 
+  weaponName: Shot_7mm
+  shootType: 0
+  fireRate: 1
+  bulletsPerShot: 6
+  defaultFireRate: 0
+  burstActive: 0
+  burstAvailable: 0
+  burstBulletsPerShot: 0
+  burstFireRate: 0
+  burstFireDelay: 0.15
+  bulletsInMagazine: 10
+  magazineCapacity: 10
+  totalReserveAmmo: 9999
+  baseBulletSpread: 15
+  maximumBulletSpread: 15
+  bulletSpreadIncreaseRate: 0.15
+  weaponType: 3
+  reloadSpeed: 1
+  equipmentSpeed: 3
+  gunDistance: 4
+  cameraDistance: 6

@@ -22,53 +22,89 @@ public enum ShootType{
 
 public class Weapon
 {
+
     public WeaponType weaponType;
-    [Header("Shooting details")]
     public ShootType shootType;
-    public int bulletsPerShot; // The number of bullets fired per shot
-    public float defaultFireRate; // The default fire rate of the weapon
+
+
+    #region Regular Shot mode Variables:
+        
+    
+    public int bulletsPerShot {get;  private set;} // The number of bullets fired per shot
+    private float defaultFireRate; // The default fire rate of the weapon
     public float fireRate = 1f;
     private float lastShootTime;
 
-    [Header("Burst FIre")]
+    #endregion
 
-    public bool burstAvailable; // Check if the weapon has burst fire mode
-    public bool burstActive; // Check if the weapon is in burst fire mode
-    public int burstBulletsPerShot;
-    public float burstFireRate;
-    public float burstFireDelay = .15f; // The delay between each bullet fired in burst fire mode
+    #region Burst Shot Mode Variables 
+    private bool burstAvailable; // Check if the weapon has burst fire mode
+    private bool burstActive; // Check if the weapon is in burst fire mode
+    private int burstBulletsPerShot;
+    private float burstFireRate;
+    public float burstFireDelay {get;  private set;} // The delay between each bullet fired in burst fire mode
+    #endregion
 
 
-
-
-    [Header("Magazine details")]
+    #region Magazine Variables
+        
     public int bulletsInMagazine;
     public int magazineCapacity;
     public int totalReserveAmmo;
 
-    [Range(1f, 2f)]
-    public float reloadSpeed = 1f; // Make the reload speed on different gun change 
-    [Range(1f,2f)]
-    public float equipmentSpeed = 1f; // Make the equip speed on different gun change
+    #endregion
 
-    [Range(2,12)]
-    public float gunDistance = 4f; // The distance from the player to the gun when shooting
 
-    [Range(3,8)]
-    public float cameraDistance = 2f; // The distance from the camera to the gun when shooting
+    #region Weapon Generic Variables 
+    public float reloadSpeed {get;  private set;} // Make the reload speed on different gun change 
+    public float equipmentSpeed {get;  private set;} // Make the equip speed on different gun change
 
+    public float gunDistance{get;   private set;} // The distance from the player to the gun when shooting
+
+    public float cameraDistance {get;  private set;} // The distance from the camera to the gun when shooting
+
+    public Weapon_Data weaponData {get; private set;} // servers as default weapon_data
+    #endregion
 
 
    
-    [Header("Bullet Spread")]
-    public float baseBulletSpread = 0.5f; // The base spread of the bullet when shooting
+    #region Weapon Spread Variables
+    private float baseBulletSpread = 0.5f; // The base spread of the bullet when shooting
     private float currentBulletSpread = 2f; // The spread of the bullet when shooting
-    public float maximumBulletSpread = 5f; // The maximum spread of the bullet when shooting
-    public float bulletSpreadIncreaseRate = 0.15f; // The rate at which the bullet spread increases when shooting
+    private float maximumBulletSpread = 5f; // The maximum spread of the bullet when shooting
+    private float bulletSpreadIncreaseRate = 0.15f; // The rate at which the bullet spread increases when shooting
     private float lastBulletSpreadTime;
     private float spreadCooldown = 1f; // The time it takes for the bullet spread to reset
     
+    #endregion
 
+    public Weapon(Weapon_Data weaponData){
+        fireRate = weaponData.fireRate;
+        defaultFireRate = fireRate;
+        weaponType = weaponData.weaponType;
+        shootType = weaponData.shootType;
+        this.baseBulletSpread = weaponData.baseBulletSpread;
+        this.maximumBulletSpread = weaponData.maximumBulletSpread;
+        this.bulletSpreadIncreaseRate = weaponData.bulletSpreadIncreaseRate;
+   
+        this.reloadSpeed = weaponData.reloadSpeed;
+        this.equipmentSpeed = weaponData.equipmentSpeed;
+        this.gunDistance = weaponData.gunDistance;
+        this.cameraDistance = weaponData.cameraDistance;
+
+        this.burstActive = weaponData.burstActive;
+        this.burstAvailable = weaponData.burstAvailable;
+        this.burstFireRate = weaponData.burstFireRate;
+        this.burstFireDelay = weaponData.burstFireDelay;
+
+        this.bulletsPerShot = weaponData.bulletsPerShot;
+        this.defaultFireRate = weaponData.defaultFireRate;
+
+        this.bulletsInMagazine = weaponData.bulletsInMagazine;
+        this.magazineCapacity = weaponData.magazineCapacity;
+        this.totalReserveAmmo = weaponData.totalReserveAmmo;
+        this.weaponData = weaponData;
+    }
 
     #region Spread Methods:
          public Vector3 ApplyBulletSpread(Vector3 originalDirection){

@@ -5,10 +5,10 @@ using System.Collections.Generic;
 public class Grid : MonoBehaviour {
 
 	public bool displayGridGizmos;
-	public LayerMask unwalkableMask;
-	public Vector2 gridWorldSize;
+	public LayerMask unwalkableMask; 
+	public Vector2 gridWorldSize; // A grid worldSize of the world 
 	public float nodeRadius;
-	Node[,] grid;
+	Node[,] grid; // 2d array to store the the grid of each node
 
 	float nodeDiameter;
 	int gridSizeX, gridSizeY;
@@ -25,6 +25,9 @@ public class Grid : MonoBehaviour {
 			return gridSizeX * gridSizeY;
 		}
 	}
+
+
+	// Create a grid and return the world positon in the World :
 
 	void CreateGrid() {
 		grid = new Node[gridSizeX,gridSizeY];
@@ -59,7 +62,7 @@ public class Grid : MonoBehaviour {
 		return neighbours;
 	}
 	
-
+	// Find the node that we stand on
 	public Node NodeFromWorldPoint(Vector3 worldPosition) {
 		float percentX = (worldPosition.x + gridWorldSize.x/2) / gridWorldSize.x;
 		float percentY = (worldPosition.z + gridWorldSize.y/2) / gridWorldSize.y;
